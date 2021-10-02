@@ -285,7 +285,7 @@ function App() {
   const [country, setCountry] = useState("")
   const [countryCode, setcountryCode] = useState("")
   const [clickedCountryName, setClickedCountryName] = useState("")
-  const getCountryCode = (event) => {
+  const handleChange = (event) => {
     let countryName = event.target.value;
     setCountry(countryName)
   }
@@ -296,20 +296,26 @@ function App() {
 
   const flagsUrl = countries.map(country => ({ url: getCountryFlag(countriesWithCode[country]), country }))
 
-  function handleButtonClick(params) {
-    setcountryCode(countriesWithCode[country])
+  function handleButtonClick() {
+    const wordList = country.split(" ")
+    for (var i = 0; i < wordList.length; i++) {
+      wordList[i] = wordList[i].charAt(0).toUpperCase() + wordList[i].slice(1);
+      console.log(wordList[i]);
+    }
+    const c = wordList.join(" ")
+    setcountryCode(countriesWithCode[c])
     setClickedCountryName("")
   }
 
   return (
     <div className="App">
       <div>
-        <input placeholder="Enter the Country Name" onChange={getCountryCode} value={country} />
+        <input placeholder="Enter the Country Name" onChange={e => handleChange(e)} value={country} />
         <button className="btn-get-flags" onClick={handleButtonClick}>Get Flag</button></div>
       <div> {countryCode && <img className="flags" src={getCountryFlag(countryCode)} alt="flags"></img>}
         <p>{clickedCountryName}</p>
       </div>
-
+      {!clickedCountryName && !countryCode && <p style={{ color: "red" }}>This country is not available in our database</p>}
       <section >
         <ul className="image-list">
           {flagsUrl.map(flag => {
